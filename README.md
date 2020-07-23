@@ -57,4 +57,37 @@ Alternatively the Makefile in the root directory comprises all the relevant task
 
 # Quick start guide
 
-To be continued ...
+Assuming your Strava account and the application has already been setup and authorised, we will start by creating the configuration file in the project folder. From the root directory navigate as follows:
+
+> cd garmin_mod/
+
+> touch config.ini
+
+Now that you created the configuration file, append the necessary credentials given by the application you have setup in your Strava account (see step 2). 
+
+Once the credentials are stored into the configuration file, we are ready to make the first call over the wrapper. In a python console (Python 3.X) we may now import the necessary modules (make sure the session is in the project directory path):
+
+```python
+from dataConnector import StravaDataConnector
+stravaInst = StravaDataConnector(config_file='config.ini')
+```
+
+Now that we have instantiated the StravaDataConnector class and passed on the configuration file including the credentials as a parameter argument, we may now call the relevant methods to retrieve the data hosted on the Strava server:
+
+```python
+reqOutput = stravaInst.get_data(fetch_type='activities')
+data = reqOutput.json()
+```
+
+In this case all the released activities data on the Strava server of the application are called and retrieved. For the time being, the following 'fetch types' are supported:
+
+- athlete
+- activities
+- activity
+- stream
+- segmentsStarred
+- segments
+
+For further details on the 'fetch types', please refer to <a href="https://developers.strava.com/docs/reference/" target="_blank">Strava documentation</a>. 
+
+Feel free to contribute to this project and stay fit. 
