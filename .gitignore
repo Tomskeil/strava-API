@@ -1,0 +1,8 @@
+# Virtual environment settings
+/venv/
+
+# Configuration
+/garmin_mod/config.ini
+
+# Compiled source code
+/garmin_mod/__pycache__/
