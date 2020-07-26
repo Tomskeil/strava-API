@@ -1,1 +1,1 @@
-from . import dataConnector
+import dataConnector
