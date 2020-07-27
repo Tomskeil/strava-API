@@ -44,9 +44,76 @@ class DataConnector(ABC):
 
 # Class definitions
 class StravaDataConnector(DataConnector):
+    """
+    The subclass Strava API data connector
+
+
+    Attributes
+    ---------
+    base_url : str
+        The base URL for the Strava API
+
+    config_parameters : dict
+        A dictionary containing the confidential credentials of the Strava application
+
+    _access_token : str
+        The access token of the Strava application (default None)
+
+    defaultActivity : dict
+        The default activity metadata stored as a buffer
+
+
+    Methods
+    ------
+    authenticate()
+        Authenticates against the Strava server and retrieves access token
+
+    get_data(fetch_type, **kwargs)
+        Retrieves the relevant data with the keyword arguments
+
+    headers()
+        Returns the authorisation HTTP header
+
+    read_configs(config, rel_section)
+        Reads the confidential Strava application credentials from the configuration file
+
+    getLastID(setDefault=True)
+        Get the last identification of the relevant activity and optionally set as default or not
+
+    get_activities_data(*args)
+        Get a list of all activities on the Strava server for the application
+
+    fetch_athlete(**kwargs)
+        Retrieve athlete data
+
+    fetch_activities(**kwargs)
+        Retrieve activities data
+
+    fetch_activity(act_id=None, **kwargs)
+        Retrieve activity data based on specified activity identification
+
+    fetch_stream(act_id=None, keys=None, **kwargs)
+        Retrieve stream data based on specified activity identification and relevant keys
+
+    fetch_segmentsStarred(**kwargs)
+        Retrieve segments starred data
+
+    fetch_segments(act_id=None, **kwargs)
+        Retrieve segments data based on specified activity identification
+    """
     base_url = "http://www.strava.com/api/v3"
 
     def __init__(self, config_file: str, access_token=None):
+        """
+        Parameters
+        ---------
+        config_file : str
+            The absolute file path of the configuraiton file
+
+        access_token : str, optional
+            The access token retrieved by the Strava application (default None)
+        """
+
         self.config_parameters = self.read_configs(config=config_file,
                                                    rel_section="StravaCredentials")
 
