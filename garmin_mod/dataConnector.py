@@ -126,6 +126,15 @@ class StravaDataConnector(DataConnector):
         return 'Strava API-connector'
 
     def authenticate(self):
+        """
+        Processes the authentication flow of the oAuth2.0 mechanism and retrieves an access token.
+
+        Returns
+        ---------
+        self
+            Returns the instance and sets the access token inplace
+        """
+
         auth_url = "https://www.strava.com/oauth/token"
 
         payload = {"grant_type": "refresh_token", **self.config_parameters}
@@ -140,6 +149,24 @@ class StravaDataConnector(DataConnector):
         return self
 
     def get_data(self, fetch_type: str, **kwargs):
+        """
+        Retrieves the data from the Strava server by specific fetch type and conditional keyword arguments
+
+        Parameters
+        ---------
+        fetch_type : str
+            The specific fetch type to be retrieved (e.g. 'athlete', 'activities', 'activity' etc.)
+
+        kwargs
+            Conditional keyword arguments (e.g. 'act_id' specifying the specific activity identification to be retrieved)
+
+
+        Returns
+        -------
+        Response
+            Response object of the callback function relevant to the specific fetch type. 
+        """
+
         fetchCall = "fetch_" + fetch_type
         output = None
 
@@ -163,6 +190,23 @@ class StravaDataConnector(DataConnector):
 
     @staticmethod
     def read_configs(config, rel_section):
+        """
+        Static method to read and retrieve the selected configuration file and its contents
+
+        Parameters
+        ----------
+        config : str
+            The name and/or filepath to the configuration file in string format.
+
+        rel_section : str
+            The relevant section of the configuration file wich should be parsed into the environment.
+
+
+        Returns
+        -------
+        dict
+            Returns dictionary object containing the respective credentials of the configuration file. 
+        """
         configInst = configparser.ConfigParser()
         configInst.read(config)
 
@@ -173,6 +217,19 @@ class StravaDataConnector(DataConnector):
 
 
     def getLastID(self, setDefault: bool = True):
+        """
+        Retrieves the last activity identification on the Strava server.
+
+        Parameters
+        ----------
+        setDefault : bool
+            Boolean variable indicating if the last activity id should be set as the global default.
+
+        Returns
+        -------
+        int
+            Returns the last activity id in integer format. 
+        """
         data = self.fetch_activities()
         data = data.json()
         if setDefault:
@@ -183,6 +240,19 @@ class StravaDataConnector(DataConnector):
         return data[0].get('id')
 
     def get_activities_data(self, *args):
+        """
+        Retrieves a list of all the activities stored on the Strava server
+
+        Parameters
+        ----------
+        args
+            Optional arguments indicating which metadata should be returned (e.g. 'start_date_local', 'name' etc.)
+
+        Returns
+        -------
+        list
+            Returns a list of activities and its nested metadata in respective dict format. 
+        """
         activities = self.fetch_activities()
         activities = activities.json()
 
@@ -195,18 +265,47 @@ class StravaDataConnector(DataConnector):
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_athlete(self, **kwargs):
+        """
+        Fetches athlete specific data from the Strava server
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         mod_url = self.base_url + "/athlete"
 
         return requests.get(url=mod_url, headers=self.headers)
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_activities(self, **kwargs):
+        """
+        Fetches activities specific data from the Strava server
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         mod_url = self.base_url + "/athlete/activities"
 
         return requests.get(url=mod_url, headers=self.headers)
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_activity(self, act_id: int = None, **kwargs):
+        """
+        Fetches activity specific data from the Strava server
+
+        Parameters
+        ----------
+        act_id : int
+            Parameter value for the specific activity id requested (default None)
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         if not act_id:
             if self.defaultActivity['id']:
                 print("No activity provided - Getting default activity")
@@ -223,6 +322,22 @@ class StravaDataConnector(DataConnector):
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_stream(self, act_id: int = None, keys: list = None, **kwargs):
+        """
+        Fetches stream specific data from the Strava server
+
+        Parameters
+        ----------
+        act_id : int
+            Parameter value for the specific activity id requested (default None)
+
+        keys : list
+            Parameter value for the specific keys to be retrieved (e.g. 'heartrate', default None)
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         if not act_id:
             if self.defaultActivity['id']:
                 print("No activity provided - Getting default activity")
@@ -242,6 +357,14 @@ class StravaDataConnector(DataConnector):
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_segmentsStarred(self, **kwargs):
+        """
+        Fetches segments starred specific data from the Strava server
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         mod_url = self.base_url + "/segments/starred"
 
         return requests.get(url=mod_url, headers=self.headers)
@@ -249,6 +372,19 @@ class StravaDataConnector(DataConnector):
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_segments(self, act_id: int = None, **kwargs):
+        """
+        Fetches segments specific data from the Strava server
+
+        Parameters
+        ----------
+        act_id : int
+            Parameter value for the specific activity id requested (default None)
+
+        Returns
+        -------
+        Response
+            Returns a Response object containing the respective response data over the HTTP protocol. 
+        """
         if not act_id:
             if self.defaultActivity['id']:
                 print("No activity provided - Getting default activity")
