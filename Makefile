@@ -1,7 +1,7 @@
-##  This is the build file containing all targets to be build based on optional dependencies and action encapsulated by them
+##  This is the build file containing all targets to be build based on
+##  optional dependencies and action encapsulated by them
 
 # Variables scope
-
 VENV = virtual
 VENV_DIR = ./$(VENV)
 PYTHON = $(VENV_DIR)/bin/python3
@@ -11,6 +11,7 @@ PROJECT_NAME :=
 
 .PHONY: virtual install source_dist clean
 
+# Targets
 virtual:
 	python3 -m venv $(VENV)
 

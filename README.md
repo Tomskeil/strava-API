@@ -35,7 +35,8 @@ Please bear in mind, that the respective tokens must come with the necessary rig
 
 ## 2. Configuration file setup
 
-The Strava API Python wrapper uses a local configuration file (.ini) to source the necessary confidential credentials into the package. The following configuration file can be placed in the [project folder](./garmin_mod/) of the source code and should contain the following in the exact naming convention: 
+The Strava API Python wrapper uses a local configuration file (.ini) to source the necessary confidential credentials into the package. 
+The following configuration file can be placed in the [project folder](./garmin_mod/) of the source code and should contain the following in the exact naming convention: 
 
 [StravaCredentials] <br>
 client_id: CLIENT_ID <br>
@@ -53,11 +54,12 @@ Furthermore, an editable install based on the setup.py file can be easily achiev
 
 Alternatively the Makefile in the root directory comprises all the relevant tasks and targets to build, test and run the application. 
 
-> make build
+> make install
 
 # Quick start guide
 
-Assuming your Strava account and the application has already been setup and authorised, we will start by creating the configuration file in the project folder. From the root directory navigate as follows:
+Assuming your Strava account and the application has already been setup and authorised, we will start by creating the configuration file in the project folder. 
+From the root directory navigate as follows:
 
 > cd garmin_mod/
 
@@ -65,14 +67,16 @@ Assuming your Strava account and the application has already been setup and auth
 
 Now that you created the configuration file, append the necessary credentials given by the application you have setup in your Strava account (see step 2). 
 
-Once the credentials are stored into the configuration file, we are ready to make the first call over the wrapper. In a python console (Python 3.X) we may now import the necessary modules (make sure the session is in the project directory path):
+Once the credentials are stored into the configuration file, we are ready to make the first call over the wrapper. In a python console (Python 3.X) we may 
+now import the necessary modules (make sure the session is in the project directory path):
 
 ```python
 from dataConnector import StravaDataConnector
 stravaInst = StravaDataConnector(config_file='config.ini')
 ```
 
-Now that we have instantiated the StravaDataConnector class and passed on the configuration file including the credentials as a parameter argument, we may now call the relevant methods to retrieve the data hosted on the Strava server:
+Now that we have instantiated the StravaDataConnector class and passed on the configuration file including the credentials as a parameter argument, we may 
+now call the relevant methods to retrieve the data hosted on the Strava server:
 
 ```python
 reqOutput = stravaInst.get_data(fetch_type='activities')

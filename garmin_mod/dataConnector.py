@@ -54,7 +54,8 @@ class StravaDataConnector(DataConnector):
         The base URL for the Strava API
 
     config_parameters : dict
-        A dictionary containing the confidential credentials of the Strava application
+        A dictionary containing the confidential credentials of the Strava
+        application
 
     _access_token : str
         The access token of the Strava application (default None)
@@ -75,10 +76,12 @@ class StravaDataConnector(DataConnector):
         Returns the authorisation HTTP header
 
     read_configs(config, rel_section)
-        Reads the confidential Strava application credentials from the configuration file
+        Reads the confidential Strava application credentials from the
+        configuration file
 
     getLastID(setDefault=True)
-        Get the last identification of the relevant activity and optionally set as default or not
+        Get the last identification of the relevant activity and optionally set
+        as default or not
 
     get_activities_data(*args)
         Get a list of all activities on the Strava server for the application
@@ -93,7 +96,8 @@ class StravaDataConnector(DataConnector):
         Retrieve activity data based on specified activity identification
 
     fetch_stream(act_id=None, keys=None, **kwargs)
-        Retrieve stream data based on specified activity identification and relevant keys
+        Retrieve stream data based on specified activity identification and
+        relevant keys
 
     fetch_segmentsStarred(**kwargs)
         Retrieve segments starred data
@@ -118,16 +122,18 @@ class StravaDataConnector(DataConnector):
                                                    rel_section="StravaCredentials")
 
         self._access_token = None
-        self.defaultActivity = {k: None for k in ['id', 'name', 'startDateTime']}
+        self.defaultActivity = {k: None for k in ['id',
+                                                  'name',
+                                                  'startDateTime']}
         self._access_token = access_token
-
 
     def __repr__(self):
         return 'Strava API-connector'
 
     def authenticate(self):
         """
-        Processes the authentication flow of the oAuth2.0 mechanism and retrieves an access token.
+        Processes the authentication flow of the oAuth2.0 mechanism and
+        retrieves an access token.
 
         Returns
         ---------
@@ -150,21 +156,25 @@ class StravaDataConnector(DataConnector):
 
     def get_data(self, fetch_type: str, **kwargs):
         """
-        Retrieves the data from the Strava server by specific fetch type and conditional keyword arguments
+        Retrieves the data from the Strava server by specific fetch type and
+        conditional keyword arguments
 
         Parameters
         ---------
         fetch_type : str
-            The specific fetch type to be retrieved (e.g. 'athlete', 'activities', 'activity' etc.)
+            The specific fetch type to be retrieved (e.g. 'athlete',
+            'activities', 'activity' etc.)
 
         kwargs
-            Conditional keyword arguments (e.g. 'act_id' specifying the specific activity identification to be retrieved)
+            Conditional keyword arguments (e.g. 'act_id' specifying the
+            specific activity identification to be retrieved)
 
 
         Returns
         -------
         Response
-            Response object of the callback function relevant to the specific fetch type. 
+            Response object of the callback function relevant to the specific
+            fetch type.
         """
 
         fetchCall = "fetch_" + fetch_type
@@ -191,7 +201,8 @@ class StravaDataConnector(DataConnector):
     @staticmethod
     def read_configs(config, rel_section):
         """
-        Static method to read and retrieve the selected configuration file and its contents
+        Static method to read and retrieve the selected configuration file and
+        its contents
 
         Parameters
         ----------
@@ -199,13 +210,15 @@ class StravaDataConnector(DataConnector):
             The name and/or filepath to the configuration file in string format.
 
         rel_section : str
-            The relevant section of the configuration file wich should be parsed into the environment.
+            The relevant section of the configuration file wich should be
+            parsed into the environment.
 
 
         Returns
         -------
         dict
-            Returns dictionary object containing the respective credentials of the configuration file. 
+            Returns dictionary object containing the respective credentials of
+            the configuration file.
         """
         configInst = configparser.ConfigParser()
         configInst.read(config)
@@ -215,7 +228,6 @@ class StravaDataConnector(DataConnector):
 
         return return_dict
 
-
     def getLastID(self, setDefault: bool = True):
         """
         Retrieves the last activity identification on the Strava server.
@@ -223,12 +235,13 @@ class StravaDataConnector(DataConnector):
         Parameters
         ----------
         setDefault : bool
-            Boolean variable indicating if the last activity id should be set as the global default.
+            Boolean variable indicating if the last activity id should be set
+            as the global default.
 
         Returns
         -------
         int
-            Returns the last activity id in integer format. 
+            Returns the last activity id in integer format.
         """
         data = self.fetch_activities()
         data = data.json()
@@ -246,22 +259,26 @@ class StravaDataConnector(DataConnector):
         Parameters
         ----------
         args
-            Optional arguments indicating which metadata should be returned (e.g. 'start_date_local', 'name' etc.)
+            Optional arguments indicating which metadata should be returned
+            (e.g. 'start_date_local', 'name' etc.)
 
         Returns
         -------
         list
-            Returns a list of activities and its nested metadata in respective dict format. 
+            Returns a list of activities and its nested metadata in respective
+            dict format.
         """
         activities = self.fetch_activities()
         activities = activities.json()
 
-        rel_keys = ('start_date_local', 'name', 'id', 'type') if not args else args
+        rel_keys = ('start_date_local',
+                    'name',
+                    'id',
+                    'type') if not args else args
 
         activitiesOutput = [{k: dic[k] for k in rel_keys} for dic in activities]
 
         return activitiesOutput
-
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_athlete(self, **kwargs):
@@ -271,7 +288,8 @@ class StravaDataConnector(DataConnector):
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         mod_url = self.base_url + "/athlete"
 
@@ -285,7 +303,8 @@ class StravaDataConnector(DataConnector):
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         mod_url = self.base_url + "/athlete/activities"
 
@@ -299,12 +318,14 @@ class StravaDataConnector(DataConnector):
         Parameters
         ----------
         act_id : int
-            Parameter value for the specific activity id requested (default None)
+            Parameter value for the specific activity id requested
+            (default None)
 
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         if not act_id:
             if self.defaultActivity['id']:
@@ -328,15 +349,18 @@ class StravaDataConnector(DataConnector):
         Parameters
         ----------
         act_id : int
-            Parameter value for the specific activity id requested (default None)
+            Parameter value for the specific activity id requested
+            (default None)
 
         keys : list
-            Parameter value for the specific keys to be retrieved (e.g. 'heartrate', default None)
+            Parameter value for the specific keys to be retrieved
+            (e.g. 'heartrate', default None)
 
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         if not act_id:
             if self.defaultActivity['id']:
@@ -363,12 +387,12 @@ class StravaDataConnector(DataConnector):
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         mod_url = self.base_url + "/segments/starred"
 
         return requests.get(url=mod_url, headers=self.headers)
-
 
     @retry_request(retry_count=3, errorCallback='authenticate')
     def fetch_segments(self, act_id: int = None, **kwargs):
@@ -378,12 +402,14 @@ class StravaDataConnector(DataConnector):
         Parameters
         ----------
         act_id : int
-            Parameter value for the specific activity id requested (default None)
+            Parameter value for the specific activity id requested
+            (default None)
 
         Returns
         -------
         Response
-            Returns a Response object containing the respective response data over the HTTP protocol. 
+            Returns a Response object containing the respective response data
+            over the HTTP protocol.
         """
         if not act_id:
             if self.defaultActivity['id']:
@@ -398,5 +424,3 @@ class StravaDataConnector(DataConnector):
         mod_url = self.base_url + "/segments/{act_id}".format(act_id=act_id)
 
         return requests.get(url=mod_url, headers=self.headers)
-
-
