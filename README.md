@@ -1,4 +1,4 @@
-# Strava Application Programming Interface - Python Wrapper
+# Strava Application Programming Interface - Python Wrapper 1.0.0
 
 This project is designed for developers to interact with the 
 <a href="https://developers.strava.com/" target="_blank">Strava API</a>
