@@ -6,7 +6,7 @@ VENV = virtual
 VENV_DIR = ./$(VENV)
 PYTHON = $(VENV_DIR)/bin/python3
 PIP = $(VENV_DIR)/bin/pip3
-PROJECT_NAME :=
+PROJECT_NAME := stravaAPI
 
 
 .PHONY: virtual install source_dist clean
